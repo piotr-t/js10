@@ -1,6 +1,8 @@
-const inquirer = require("inquirer");
+
 //1)
 // scope from 2 to max
+
+
 let max = 30;
 
 class GetRandomScope {
@@ -48,15 +50,72 @@ console.log(...getNumbers);
 console.log('liczby pierwsze:', ...getPrimNumbers);
 
 //2)
+
+let [paragraphScope] = document.getElementsByClassName("paragraphScope-checkNumber");
+let [paragraph] = document.getElementsByClassName("paragraph-checkNumber");
+let [paragraphStep] = document.getElementsByClassName("paragraphStep-checkNumber");
+let [button] = document.getElementsByClassName("button-checkNumber");
+let [input] = document.getElementsByClassName("input-checkNumber");
+input.value = '';
+let max2 = 1000;
+paragraphScope.innerHTML = "  Scope number:  0  -  " + max2;
+let wynik;
+let counter = 0;
+
 class GuessingGame extends GetRandomScope {
 
     constructor(max) {
         let { rand } = super(max);
         this.rand = rand;
+        this.value = null;
+        this.minWynik = 0;
+        this.maxWynik = max2;
     }
 }
-let Guess = new GuessingGame(1000);
-console.log("2)", Guess.rand);
+let guess = new GuessingGame(max2);
+
+class Guessingnumber {
+
+    guesNumber() {
+        let { value } = input;
+        value = parseInt(value);
+        console.log("2)", guess.rand);
+
+        if (value && !isNaN(value) && value !== guess.value) {
+            counter++;
+            paragraph.style.color = "rgb(42, 110, 165)";
+            button.textContent = "Check Number"
+            paragraphStep.textContent = "Step: " + counter;
+
+            if (guess.rand === value) {
+                paragraph.style.color = "red";
+                button.textContent = "New Game"
+                wynik = "gratulacje your number:  " + value;
+                guess = new GuessingGame(max2);
+                input.value = '';
+                counter = 0;
+                paragraphScope.innerHTML = "  Scope number:  0  -  " + max2;
+            } else if (
+                guess.rand > value) {
+                wynik = "za mało";
+                value > guess.minWynik ? guess.minWynik = value : guess.minWynik;
+            } else {
+                wynik = "za dużo";
+                value < max2 && value < guess.maxWynik ? guess.maxWynik = value : max2;
+            };
+            paragraphScope.innerHTML = "  Scope number:  " + guess.minWynik + "  -  " + guess.maxWynik;
+            guess.value = value;
+            paragraph.textContent = wynik;
+        }
+
+    }
+
+}
+
+let GN = new Guessingnumber(max2);
+
+button.addEventListener("click", GN.guesNumber);
+
 //3)rotate list
 class RotateList {
     constructor(k, list) {
@@ -118,14 +177,14 @@ class PigLatin {
         return textBefore.split(" ").map(item => {
             let i0 = item[0].toLowerCase();
             if (item[item.length - 1] !== ',') {
-                if (item[0].toLowerCase() !== item[item.length - 1].toLowerCase()) {
-                    item += i0;
+                if (i0 !== item[item.length - 1].toLowerCase()) {
+                    if (i0 !== "a") { item += i0 };
                 }
                 item += "ay";
             } else if (item.length > 1) {
                 let iEnd = item[item.length - 1];
                 item = item.slice(0, item.length - 1);
-                item += i0;
+                if (i0 !== "a") { item += i0 };
                 item += "ay" + iEnd;
             }
             return item.slice(1);
@@ -133,7 +192,7 @@ class PigLatin {
     }
 }
 
-let textAfter = new PigLatin("Litwo ojczyzno moja, ty jesteś jak zdrowie");
+let textAfter = new PigLatin("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua");
 console.log(...textAfter);
 
 
